@@ -1,6 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
+:root {
+  --primary-color: #2151c8;
+  --accent-color: #45d9dd;
+  --light-color: #fffdff;
+  --dark-color: #020002;
+}
+
 html {
   font-size: 14px;
 }
@@ -22,4 +29,17 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+.navbar {
+  background-color: var(--primary-color);
+}
+
+.navbar-brand {
+  font-family: 'Cinzel', serif;
+  color: var(--light-color);
+}
+
+.navbar-brand:hover {
+  color: var(--accent-color);
 }
