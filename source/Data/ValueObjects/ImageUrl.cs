@@ -1,4 +1,6 @@
-﻿namespace Data.ValueObjects
+﻿using Data.Exceptions;
+
+namespace Data.ValueObjects
 {
     public sealed record ImageUrl
     {
@@ -12,7 +14,7 @@
         public static ImageUrl Create(string value)
         {
             if (!Uri.TryCreate(value, UriKind.Absolute, out var uri))
-                throw new CannotUnloadAppDomainException("Invalid image URL");
+                throw new DomainException("Invalid image URL");
 
             return new ImageUrl(uri.ToString());
         }
