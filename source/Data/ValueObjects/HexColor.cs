@@ -20,7 +20,7 @@ namespace Data.ValueObjects
             return color;
         }
 
-        private static bool TryParse(string? input, out HexColor color)
+        public static bool TryParse(string? input, out HexColor color)
         {
             color = default;
 
