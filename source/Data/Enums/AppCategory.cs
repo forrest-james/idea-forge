@@ -1,6 +1,6 @@
 ﻿namespace Data.Enums
 {
-    internal enum AppCategory
+    public enum AppCategory
     {
         Productivity,
         Entertainment,

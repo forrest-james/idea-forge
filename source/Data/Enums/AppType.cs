@@ -1,6 +1,6 @@
 ﻿namespace Data.Enums
 {
-    internal enum AppType
+    public enum AppType
     {
         Mobile,
         Web,
