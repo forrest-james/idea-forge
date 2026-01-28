@@ -2,10 +2,21 @@
 
 namespace Data.Models
 {
-    internal class Palette
+    public class Palette
     {
-        public HexColor PrimaryColor { get; set; }
-        public HexColor SecondaryColor { get; set; }
-        public HexColor AccentColor { get; set; }
+        public Guid Id { get; private set; }
+        public HexColor PrimaryColor { get; private set; }
+        public HexColor SecondaryColor { get; private set; }
+        public HexColor AccentColor { get; private set; }
+
+        private Palette() { }
+
+        public Palette(HexColor primaryColor, HexColor secondaryColor, HexColor accentColor)
+        {
+            Id = Guid.NewGuid();
+            PrimaryColor = primaryColor;
+            SecondaryColor = secondaryColor;
+            AccentColor = accentColor;
+        }
     }
 }
