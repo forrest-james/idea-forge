@@ -41,7 +41,7 @@ namespace Data.EF
                     .HasForeignKey(i => i.AppDesignId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                entity.Navigation("_images")
+                entity.Navigation(e => e.Images)
                     .UsePropertyAccessMode(PropertyAccessMode.Field);
             });
 
