@@ -1,0 +1,64 @@
+﻿using Data.Converters;
+using Data.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace Data.EF
+{
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+    {
+        public DbSet<AppIdea> AppIdeas => Set<AppIdea>();
+        public DbSet<Palette> Palettes => Set<Palette>();
+        public DbSet<Challenge> Challenges => Set<Challenge>();
+        public DbSet<AppDesign> AppDesigns => Set<AppDesign>();
+        public DbSet<Image> Images => Set<Image>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Palette>(entity =>
+            {
+                entity.Property(e => e.PrimaryColor)
+                    .HasConversion(new HexColorValueConverter())
+                    .HasMaxLength(7)
+                    .IsRequired();
+                entity.Property(e => e.SecondaryColor)
+                    .HasConversion(new HexColorValueConverter())
+                    .HasMaxLength(7)
+                    .IsRequired();
+                entity.Property(e => e.AccentColor)
+                    .HasConversion(new HexColorValueConverter())
+                    .HasMaxLength(7)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<AppDesign>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasMany<Image>()
+                    .WithOne()
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Navigation("_images")
+                    .UsePropertyAccessMode(PropertyAccessMode.Field);
+            });
+
+            modelBuilder.Entity<Image>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Order).IsRequired();
+
+                entity.OwnsOne(e => e.Url, url =>
+                {
+                    url.Property(u => u.Value)
+                        .HasColumnName("Url")
+                        .IsRequired();
+                });
+            });
+
+
+        }
+    }
+}
