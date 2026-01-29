@@ -12,7 +12,7 @@ namespace Data.Models
         public Palette Palette { get; private set; }
         public string Description { get; private set; }
         public IReadOnlyCollection<Image> Images => _images;
-        public IReadOnlyCollection<Image> OrderedImages => _images.OrderBy(i => i.Order).ToList();
+        public IReadOnlyList<Image> OrderedImages => _images.OrderBy(i => i.Order).ToList();
 
         private AppDesign() { }
 
