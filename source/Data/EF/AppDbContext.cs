@@ -36,7 +36,7 @@ namespace Data.EF
             {
                 entity.HasKey(e => e.Id);
 
-                entity.HasMany<Image>()
+                entity.HasMany(e => e.Images)
                     .WithOne()
                     .HasForeignKey(i => i.AppDesignId)
                     .OnDelete(DeleteBehavior.Cascade);
