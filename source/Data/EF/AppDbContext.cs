@@ -49,6 +49,8 @@ namespace Data.EF
             {
                 entity.HasKey(e => e.Id);
 
+                entity.Property(e => e.AppDesignId).IsRequired();
+
                 entity.Property(e => e.Order).IsRequired();
 
                 entity.OwnsOne(e => e.Url, url =>
