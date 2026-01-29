@@ -49,6 +49,11 @@ namespace Data.EF
             {
                 entity.HasKey(e => e.Id);
 
+                entity.HasOne<AppDesign>()
+                    .WithMany(ad => ad.Images)
+                    .HasForeignKey("AppDesignId")
+                    .OnDelete(DeleteBehavior.Cascade);
+
                 entity.Property(e => e.Order).IsRequired();                
 
                 entity.OwnsOne(e => e.Url, url =>
