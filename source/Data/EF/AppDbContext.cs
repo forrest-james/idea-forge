@@ -38,6 +38,7 @@ namespace Data.EF
 
                 entity.HasMany<Image>()
                     .WithOne()
+                    .HasForeignKey("AppDesignId")
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.Navigation("_images")
