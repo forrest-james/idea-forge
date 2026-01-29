@@ -27,7 +27,7 @@ namespace Data.Models
         public void AddImage(ImageUrl url)
         {
             var order = _images.Count;
-            _images.Add(new Image(this.Id, url, order));
+            _images.Add(new Image(url, order));
         }
 
         public void RemoveImage(Guid imageId)
