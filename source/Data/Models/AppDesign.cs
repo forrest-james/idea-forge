@@ -9,15 +9,17 @@ namespace Data.Models
 
         public Guid Id { get; private set; }
         public Challenge Challenge { get; private set; }
+        public Palette Palette { get; private set; }
         public string Description { get; private set; }
         public IReadOnlyCollection<Image> Images => _images.OrderBy(i => i.Order).ToList();
 
         private AppDesign() { }
 
-        public AppDesign(Challenge challenge, string description)
+        public AppDesign(Challenge challenge, Palette palette, string description)
         {
             Id = Guid.NewGuid();
             Challenge = challenge;
+            Palette = palette;
             Description = description;
         }
 
