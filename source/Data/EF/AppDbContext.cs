@@ -38,7 +38,7 @@ namespace Data.EF
 
                 entity.HasMany<Image>()
                     .WithOne()
-                    .HasForeignKey("AppDesignId")
+                    .HasForeignKey(i => i.AppDesignId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.Navigation("_images")
