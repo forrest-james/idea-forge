@@ -35,24 +35,19 @@ namespace Data.EF
             modelBuilder.Entity<AppDesign>(entity =>
             {
                 entity.HasKey(e => e.Id);
-
+                
                 entity.HasMany(e => e.Images)
-                    .WithOne()
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                entity.Navigation(e => e.Images)
-                    .UsePropertyAccessMode(PropertyAccessMode.Field);
+                      .WithOne()
+                      .HasForeignKey(i => i.AppDesignId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Image>(entity =>
             {
-                entity.HasKey(e => e.Id);
+                entity.HasKey(e => e.Id);                                                                         
 
-                entity.HasOne<AppDesign>()
-                    .WithMany(ad => ad.Images)
-                    .HasForeignKey("AppDesignId");                    
-
-                entity.Property(e => e.Order).IsRequired();                
+                entity.Property(e => e.AppDesignId).IsRequired();
+                entity.Property(e => e.Order).IsRequired();
 
                 entity.OwnsOne(e => e.Url, url =>
                 {

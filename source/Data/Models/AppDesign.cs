@@ -11,8 +11,7 @@ namespace Data.Models
         public Challenge Challenge { get; private set; }
         public Palette Palette { get; private set; }
         public string Description { get; private set; }
-        public IReadOnlyCollection<Image> Images => _images;
-        public IReadOnlyList<Image> OrderedImages => _images.OrderBy(i => i.Order).ToList();
+        public IReadOnlyCollection<Image> Images => _images.AsReadOnly();        
 
         private AppDesign() { }
 
@@ -27,7 +26,7 @@ namespace Data.Models
         public void AddImage(ImageUrl url)
         {
             var order = _images.Count;
-            _images.Add(new Image(url, order));
+            _images.Add(new Image(Id, url, order));
         }
 
         public void RemoveImage(Guid imageId)
