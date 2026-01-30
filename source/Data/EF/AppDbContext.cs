@@ -38,7 +38,6 @@ namespace Data.EF
 
                 entity.HasMany(e => e.Images)
                     .WithOne()
-                    .HasForeignKey("AppDesignId")
                     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.Navigation(e => e.Images)
@@ -50,9 +49,7 @@ namespace Data.EF
                 entity.HasKey(e => e.Id);
 
                 entity.HasOne<AppDesign>()
-                    .WithMany(ad => ad.Images)
-                    .HasForeignKey("AppDesignId")
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .WithMany(ad => ad.Images);                    
 
                 entity.Property(e => e.Order).IsRequired();                
 
