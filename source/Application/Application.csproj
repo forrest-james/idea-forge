@@ -14,12 +14,15 @@
     <Folder Include="Common\Behaviors\" />
     <Folder Include="Common\Interfaces\" />
     <Folder Include="Common\Models\" />
-    <Folder Include="Features\Challenges\Commands\" />
     <Folder Include="Features\Challenges\DTOs\" />
     <Folder Include="Features\Challenges\Queries\" />
     <Folder Include="Features\Submissions\Commands\" />
     <Folder Include="Features\Submissions\DTOs\" />
     <Folder Include="Features\Submissions\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.0.0" />
   </ItemGroup>
 
 </Project>
