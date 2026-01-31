@@ -1,10 +1,11 @@
 ﻿using Data.Converters;
 using Data.Models;
+using Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.EF
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IAppDbContext
     {
         public DbSet<AppIdea> AppIdeas => Set<AppIdea>();
         public DbSet<Palette> Palettes => Set<Palette>();
