@@ -3,7 +3,7 @@ using Data.ValueObjects;
 
 namespace Data.Models
 {
-    public class AppDesign
+    public class Submission
     {
         private readonly List<Image> _images = new();
 
@@ -12,9 +12,9 @@ namespace Data.Models
         public string Description { get; private set; }
         public IReadOnlyCollection<Image> Images => _images.AsReadOnly();        
 
-        private AppDesign() { }
+        private Submission() { }
 
-        public AppDesign(Challenge challenge, string description)
+        public Submission(Challenge challenge, string description)
         {
             Id = Guid.NewGuid();
             Challenge = challenge;

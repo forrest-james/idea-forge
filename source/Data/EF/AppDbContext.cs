@@ -9,7 +9,7 @@ namespace Data.EF
         public DbSet<AppIdea> AppIdeas => Set<AppIdea>();
         public DbSet<Palette> Palettes => Set<Palette>();
         public DbSet<Challenge> Challenges => Set<Challenge>();
-        public DbSet<AppDesign> AppDesigns => Set<AppDesign>();
+        public DbSet<Submission> AppDesigns => Set<Submission>();
         public DbSet<Image> Images => Set<Image>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,7 +32,7 @@ namespace Data.EF
                     .IsRequired();
             });
 
-            modelBuilder.Entity<AppDesign>(entity =>
+            modelBuilder.Entity<Submission>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 
