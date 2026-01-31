@@ -9,7 +9,7 @@ namespace Data.EF
         public DbSet<AppIdea> AppIdeas => Set<AppIdea>();
         public DbSet<Palette> Palettes => Set<Palette>();
         public DbSet<Challenge> Challenges => Set<Challenge>();
-        public DbSet<Submission> AppDesigns => Set<Submission>();
+        public DbSet<Submission> Submissions => Set<Submission>();
         public DbSet<Image> Images => Set<Image>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace Data.EF
                 
                 entity.HasMany(e => e.Images)
                       .WithOne()
-                      .HasForeignKey(i => i.AppDesignId)
+                      .HasForeignKey(i => i.SubmissionId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -46,7 +46,7 @@ namespace Data.EF
             {
                 entity.HasKey(e => e.Id);                                                                         
 
-                entity.Property(e => e.AppDesignId).IsRequired();
+                entity.Property(e => e.SubmissionId).IsRequired();
                 entity.Property(e => e.Order).IsRequired();
 
                 entity.OwnsOne(e => e.Url, url =>
