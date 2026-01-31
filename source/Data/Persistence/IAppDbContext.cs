@@ -1,7 +1,7 @@
 ﻿using Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Common.Interfaces
+namespace Data.Persistence
 {
     public interface IAppDbContext
     {
