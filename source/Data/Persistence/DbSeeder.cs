@@ -12,7 +12,7 @@ namespace Data.Persistence
         {
             await dbContext.Database.MigrateAsync(cancellationToken);
 
-            if (!await.dbContext.AppIdeas.AnyAsync(cancellationToken))
+            if (!await dbContext.AppIdeas.AnyAsync(cancellationToken))
             {
                 dbContext.AppIdeas.AddRange(
                     new AppIdea(AppType.Web, AppCategory.Health, "Personalized workout planner"),
