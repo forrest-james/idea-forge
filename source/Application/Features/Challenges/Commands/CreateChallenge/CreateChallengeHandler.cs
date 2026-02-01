@@ -18,13 +18,11 @@ namespace Application.Features.Challenges.Commands.CreateChallenge
         {
             // Pick a random AppIdea and Palette
             // For MVP simplicity, ORDER BY NEWID()
-            var appIdea = await _dbContext.AppIdeas
-                .AsNoTracking()
+            var appIdea = await _dbContext.AppIdeas              
                 .OrderBy(_ => Guid.NewGuid())
                 .FirstOrDefaultAsync(cancellationToken);
 
             var palette = await _dbContext.Palettes
-                .AsNoTracking()
                 .OrderBy(_ => Guid.NewGuid())
                 .FirstOrDefaultAsync(cancellationToken);
 
