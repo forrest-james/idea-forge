@@ -12,5 +12,12 @@ namespace WebApp.Controllers
             var result = await mediator.Send(new CreateChallengeCommand(), cancellationToken);
             return Ok(result);
         }
+
+        [HttpGet("/challenges/{id:guid}")]
+        public async Task<IActionResult> GetById(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
+        {
+            var dto = await mediator.Send(new GetChallengeQuery(id), cancellationToken);
+            return dto is null ? NotFound() : Ok(dto);
+        }
     }
 }
