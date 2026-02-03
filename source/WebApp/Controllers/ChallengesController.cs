@@ -1,5 +1,6 @@
 ﻿using Application.Features.Challenges.Commands.CreateChallenge;
 using Application.Features.Challenges.Queries.GetChallenge;
+using Application.Features.Challenges.Queries.ListChallenges;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,13 @@ namespace WebApp.Controllers
         {
             var dto = await mediator.Send(new GetChallengeQuery(id), cancellationToken);
             return dto is null ? NotFound() : Ok(dto);
+        }
+
+        [HttpGet("/challenges")]
+        public async Task<IActionResult> List([FromServices] IMediator mediator, CancellationToken cancellationToken)
+        {
+            var items = await mediator.Send(new ListChallengesQuery(), cancellationToken);
+            return Ok(items);            
         }
     }
 }
