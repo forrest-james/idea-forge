@@ -1,4 +1,5 @@
 ﻿using Application.Features.Challenges.Commands.CreateChallenge;
+using Application.Features.Challenges.Queries.GetChallenge;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
