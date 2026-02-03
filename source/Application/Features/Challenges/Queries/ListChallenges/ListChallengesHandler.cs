@@ -9,8 +9,8 @@ namespace Application.Features.Challenges.Queries.ListChallenges
     {
         private readonly IAppDbContext _dbContext;
 
-        public ListChallengesHandler(IAppDbContext dbContext) => dbContext = _dbContext;
-      
+        public ListChallengesHandler(IAppDbContext dbContext) => _dbContext = dbContext;
+
         public async Task<IReadOnlyList<ChallengeListItemDto>> Handle(ListChallengesQuery request, CancellationToken cancellationToken)
         {
             var items = await _dbContext.Challenges
