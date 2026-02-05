@@ -15,9 +15,7 @@
     <Folder Include="Common\Interfaces\" />
     <Folder Include="Common\Models\" />
     <Folder Include="Features\Challenges\Commands\DeleteChallenge\" />
-    <Folder Include="Features\Submissions\Commands\CreateSubmission\" />
     <Folder Include="Features\Submissions\Commands\DeleteSubmission\" />
-    <Folder Include="Features\Submissions\DTOs\" />
     <Folder Include="Features\Submissions\Queries\GetSubmission\" />
     <Folder Include="Features\Submissions\Queries\ListSubmissions\" />
   </ItemGroup>
