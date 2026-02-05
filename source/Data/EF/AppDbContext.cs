@@ -9,7 +9,9 @@ namespace Data.EF
     {
         public DbSet<AppIdea> AppIdeas => Set<AppIdea>();
         public DbSet<Palette> Palettes => Set<Palette>();
-        public DbSet<Challenge> Challenges => Set<Challenge>();        
+        public DbSet<Challenge> Challenges => Set<Challenge>();
+        public DbSet<Submission> Submissions => Set<Submission>();
+        public DbSet<Image> Images => Set<Image>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

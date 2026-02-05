@@ -8,6 +8,8 @@ namespace Data.Persistence
         DbSet<AppIdea> AppIdeas { get; }
         DbSet<Palette> Palettes { get; }
         DbSet<Challenge> Challenges { get; }
+        DbSet<Submission> Submissions { get; }
+        DbSet<Image> Images { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
