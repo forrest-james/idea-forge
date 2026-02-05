@@ -16,7 +16,6 @@
     <Folder Include="Common\Models\" />
     <Folder Include="Features\Challenges\Commands\DeleteChallenge\" />
     <Folder Include="Features\Submissions\Commands\DeleteSubmission\" />
-    <Folder Include="Features\Submissions\Queries\ListSubmissions\" />
   </ItemGroup>
 
   <ItemGroup>

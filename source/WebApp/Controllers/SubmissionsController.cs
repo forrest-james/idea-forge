@@ -1,5 +1,6 @@
 ﻿using Application.Features.Submissions.Commands.CreateSubmission;
 using Application.Features.Submissions.Queries.GetSubmission;
+using Application.Features.Submissions.Queries.ListSubmissions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,8 +18,15 @@ namespace WebApp.Controllers
         [HttpGet("/submissions/{id:guid}")]
         public async Task<IActionResult> GetById(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
-            var dto = await mediator.Send(new GetSubmissionQuery(id), cancellationToken);
-            return dto is null ? NotFound() : Ok(dto);
+            var item = await mediator.Send(new GetSubmissionQuery(id), cancellationToken);
+            return item is null ? NotFound() : Ok(item);
+        }
+
+        [HttpGet("/submissions")]
+        public async Task<IActionResult> List([FromServices] IMediator mediator, CancellationToken cancellationToken)
+        {
+            var items = await mediator.Send(new ListSubmissionsQuery(), cancellationToken);
+            return Ok(items);
         }
     }
 }
