@@ -36,8 +36,6 @@ namespace WebApp.Controllers
         [HttpPut("/app-ideas/{id:guid}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAppIdeaCommand command, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
-            if (id != command.Id)
-                return BadRequest("Id in URL does not match Id in body.");
             await mediator.Send(command with { Id = id }, cancellationToken);
             return NoContent();
         }
