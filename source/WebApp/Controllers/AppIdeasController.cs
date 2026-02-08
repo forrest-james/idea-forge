@@ -1,4 +1,4 @@
-﻿using Application.Features.AppIdeas.Commands;
+﻿using Application.Features.AppIdeas.Commands.CreateAppIdea;
 using Application.Features.AppIdeas.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

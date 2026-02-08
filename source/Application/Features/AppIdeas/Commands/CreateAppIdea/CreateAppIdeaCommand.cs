@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Application.Features.AppIdeas.Commands
+namespace Application.Features.AppIdeas.Commands.CreateAppIdea
 {
     public sealed record CreateAppIdeaCommand(
         string Type,

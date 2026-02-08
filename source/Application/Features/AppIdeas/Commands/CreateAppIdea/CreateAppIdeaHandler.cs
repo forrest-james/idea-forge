@@ -4,7 +4,7 @@ using Data.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.AppIdeas.Commands
+namespace Application.Features.AppIdeas.Commands.CreateAppIdea
 {
     public sealed class CreateAppIdeaHandler : IRequestHandler<CreateAppIdeaCommand, CreateAppIdeaResult>
     {

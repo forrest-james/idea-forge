@@ -3,7 +3,7 @@ using Data.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.AppIdeas.Queries
+namespace Application.Features.AppIdeas.Queries.ListAppIdeas
 {
     public sealed class ListAppIdeasHandler : IRequestHandler<ListAppIdeasQuery, IReadOnlyList<AppIdeaDto>>
     {
