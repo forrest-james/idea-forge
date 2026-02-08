@@ -2,7 +2,7 @@
 using Data.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-`
+
 namespace Application.Features.AppIdeas.Commands.UpdateAppIdea
 {
     public sealed class UpdateAppIdeaHandler : IRequestHandler<UpdateAppIdeaCommand>
