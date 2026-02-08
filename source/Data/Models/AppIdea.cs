@@ -18,5 +18,12 @@ namespace Data.Models
             Category = category;
             Description = description;
         }
+
+        public void Update(AppType type, AppCategory category, string description)
+        {
+            Type = type;
+            Category = category;
+            Description = description;
+        }
     }
 }
