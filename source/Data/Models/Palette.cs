@@ -18,5 +18,12 @@ namespace Data.Models
             SecondaryColor = secondaryColor;
             AccentColor = accentColor;
         }
+
+        public void Update(HexColor primaryColor, HexColor secondaryColor, HexColor accentColor)
+        {
+            PrimaryColor = primaryColor;
+            SecondaryColor = secondaryColor;
+            AccentColor = accentColor;
+        }
     }
 }
