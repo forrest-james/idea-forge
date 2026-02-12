@@ -1,5 +1,6 @@
 ﻿using Application.Features.Palettes.Commands.CreatePalette;
 using Application.Features.Palettes.Commands.DeletePalette;
+using Application.Features.Palettes.Commands.UpdatePalette;
 using Application.Features.Palettes.Queries.ListPalettes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,21 @@ namespace WebApp.Controllers
         public async Task<IActionResult> GenerateRandom(CancellationToken cancellationToken)
         {
             await _mediator.Send(new CreatePaletteCommand(), cancellationToken);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(Guid Id, string primaryColor, string secondaryColor, string accentColor, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new UpdatePaletteCommand
+            (
+                Id: Id,
+                PrimaryColor: primaryColor,
+                SecondaryColor: secondaryColor,
+                AccentColor: accentColor
+            ), cancellationToken);
+
             return RedirectToAction(nameof(Index));
         }
 
