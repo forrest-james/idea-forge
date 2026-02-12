@@ -1,0 +1,61 @@
+﻿
+@model WebApp.ViewModels.Challenges.ChallengesIndexVm
+@{
+    ViewData["Title"] = "Challenges";
+}
+
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h1 class="h3 mb-0">Challenges</h1>
+    </div>
+    <div class="card">
+        <div class="card-header">All Challenges (@Model.Challenges.Count)</div>
+        <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th style="width: 180px;">App Idea</th>
+                        <th style="width: 160px;">Palette</th>
+                        <th style="width: 200px;" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Challenges.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-muted">No challenges yet.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var c in Model.Challenges)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">@c.Name</div>
+                                    <div class="text-muted small">@c.Id</div>
+                                </td>
+                                <td>
+                                    <div><code>@c.AppType</code></div>
+                                    <div><code>@c.AppCategory</code></div>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <div title="@c.PrimaryColor" style="width:28px;height:28px;border:1px solid #ccc;background:@c.PrimaryColor;"></div>
+                                        <div title="@c.SecondaryColor" style="width:28px;height:28px;border:1px solid #ccc;background:@c.SecondaryColor;"></div>
+                                        <div title="@c.AccentColor" style="width:28px;height:28px;border:1px solid #ccc;background:@c.AccentColor;"></div>
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="/challenges/@c.Id">View</a>
+                                    <button class="btn btn-sm btn-outline-danger" disabled>Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
