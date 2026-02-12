@@ -14,28 +14,28 @@
     <div class="card mb-4">
         <div class="card-header">Create Palette</div>
         <div class="card-body">
-            <form asp-controller=""PalettesUi" asp-action="Create" method="post">
+            <form asp-controller="PalettesUi" asp-action="Create" method="post">
                 @Html.AntiForgeryToken()
                 <div class="row g-3 align-items-end">
                     <div class="col-md-4">
                         <label class="form-label">Primary</label>
                         <div class="d-flex gap-2 align-items-center">
-                            <input type="color" class="form-control form-control-color" asp-for="PrimaryColor" />
-                            <input type="text" class="form-control" asp-for="PrimaryColor" />
+                            <input type="color" class="form-control form-control-color" id="PrimaryColorPicker" value="@Model.PrimaryColor"/>
+                            <input type="text" class="form-control" id="PrimaryColorText" asp-for="PrimaryColor" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Secondary</label>
                         <div class="d-flex gap-2 align-items-center">
-                            <input type="color" class="form-control form-control-color" asp-for="SecondaryColor" />
-                            <input type="text" class="form-control" asp-for="SecondaryColor" />
+                            <input type="color" class="form-control form-control-color" id="SecondaryColorPicker" value="@Model.SecondaryColor" />
+                            <input type="text" class="form-control" id="SecondaryColorText" asp-for="SecondaryColor" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Accent</label>
                         <div class="d-flex gap-2 align-items-center">
-                            <input type="color" class="form-control form-control-color" asp-for="AccentColor" />
-                            <input type="text" class="form-control" asp-for="AccentColor" />
+                            <input type="color" class="form-control form-control-color" id="AccentColorPicker" value="@Model.AccentColor" />
+                            <input type="text" class="form-control" id="AccentColorText" asp-for="AccentColor" />
                         </div>
                     </div>
 
@@ -123,6 +123,35 @@
 
 @section Scripts {
     <script>
+        function wireColorPair(pickerId, textId) {
+            const picker = document.getElementById(pickerId);
+            const text = document.getElementById(textId);
+            if (!picker || !text) return;
+
+            const init = normalizeHex(text.value);
+            if (init) picker.value = init;
+
+            picker.addEventListener('input', () => {
+                text.value = picker.value.toUpperCase();
+            });
+
+            text.addEventListener('input', () => {
+                const hex = normalizeHex(text.value);
+                if (hex) picker.value = hex;
+            });
+        }
+        function normalizeHex(value) {
+            if (!value) return null;
+
+            let v = value.trim();
+            if (!v.startsWith('#')) v = '#' + v;
+            if (/^#[0-9A-Fa-f]{6}$/.test(v)) return v.toUpperCase();
+            return null;
+        }
+        wireColorPair('PrimaryColorPicker', 'PrimaryColorText');
+        wireColorPair('SecondaryColorPicker', 'SecondaryColorText');
+        wireColorPair('AccentColorPicker', 'AccentColorText');
+
         const modal = document.getElementById('confirmDeleteModal');
         modal.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
