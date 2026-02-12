@@ -6,23 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers
 {
+    [ApiController]
+    [Route("api/challenges")]
     public class ChallengesController : Controller
     {
-        [HttpPost("/challenges")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(new CreateChallengeCommand(), cancellationToken);
             return Ok(result);
         }
 
-        [HttpGet("/challenges/{id:guid}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var dto = await mediator.Send(new GetChallengeQuery(id), cancellationToken);
             return dto is null ? NotFound() : Ok(dto);
         }
 
-        [HttpGet("/challenges")]
+        [HttpGet]
         public async Task<IActionResult> List([FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var items = await mediator.Send(new ListChallengesQuery(), cancellationToken);

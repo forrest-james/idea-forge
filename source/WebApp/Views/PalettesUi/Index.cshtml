@@ -6,7 +6,7 @@
 <div class="container py-4">
     <div class="d-flex align-items-center justify-content-between mb-3">
         <h1 class="h3 mb-0">Palettes</h1>
-        <form asp-controller="PalettesUi" asp-action="GenerateRandom" method="post" class="m-0">
+        <form method="post" action="/palettes/random" class="m-0">
             @Html.AntiForgeryToken()
             <button type="submit" class="btn btn-outline-primary">Generate Random Palette</button>
         </form>
@@ -14,7 +14,7 @@
     <div class="card mb-4">
         <div class="card-header">Create Palette</div>
         <div class="card-body">
-            <form asp-controller="PalettesUi" asp-action="Create" method="post">
+            <form method="post" action="/palettes">
                 @Html.AntiForgeryToken()
                 <div class="row g-3 align-items-end">
                     <div class="col-md-4">
@@ -111,10 +111,9 @@
                 <h5 class="modal-title">Update palette</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form asp-controller="PalettesUi" asp-action="Update" method="post">
+            <form method="post" id="editPaletteForm">
                 @Html.AntiForgeryToken()
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="editPaletteId" value="" />
+                <div class="modal-body">                    
                     <div class="mb-3">
                         <label class="form-label">Primary</label>
                         <div class="d-flex gap-2 align-items-center">
@@ -160,9 +159,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form asp-controller="PalettesUi" asp-action="Delete" method="post" class="m-0">
+                <form method="post" id="deletePaletteForm" class="m-0">
                     @Html.AntiForgeryToken()
-                    <input type="hidden" name="id" id="deletePaletteId" value="" />
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>
@@ -211,13 +209,12 @@
             const id = button.getAttribute('data-palette-id');
             const primary = button.getAttribute('data-primary');
             const secondary = button.getAttribute('data-secondary');
-            const accent = button.getAttribute('data-accent');
-
-            document.getElementById('editPaletteId').value = id;
+            const accent = button.getAttribute('data-accent');            
 
             document.getElementById('EditPrimaryText').value = primary;
             document.getElementById('EditSecondaryText').value = secondary;
             document.getElementById('EditAccentText').value = accent;
+            document.getElementById('editPaletteForm').action = `/palettes/${id}/update`;
 
             const p = normalizeHex(primary);
             const s = normalizeHex(secondary);
@@ -229,11 +226,11 @@
         });
 
         // Delete modal
-        const modal = document.getElementById('confirmDeleteModal');
-        modal.addEventListener('show.bs.modal', event => {
+        const deleteModal = document.getElementById('confirmDeleteModal');
+        deleteModal?.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
             const id = button.getAttribute('data-palette-id');
-            document.getElementById('deletePaletteId').value = id;
+            document.getElementById('deletePaletteForm').action = `/palettes/${id}/delete`;
         });
     </script>
 }

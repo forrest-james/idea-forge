@@ -8,16 +8,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers
 {
+    [ApiController]
+    [Route("api/palettes")]
     public sealed class PalettesController : Controller
     {
-        [HttpGet("/palettes")]
+        [HttpGet]
         public async Task<IActionResult> List([FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var items = await mediator.Send(new ListPaletteQuery(), cancellationToken);
             return Ok(items);
         }
 
-        [HttpGet("/palettes/{id:guid}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var item = await mediator.Send(new GetPaletteQuery(id), cancellationToken);
@@ -26,21 +28,21 @@ namespace WebApp.Controllers
                 : Ok(item);
         }
 
-        [HttpPost("/palettes")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePaletteCommand command, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 
-        [HttpPut("/palettes/{id:guid}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePaletteCommand command, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             await mediator.Send(command with { Id = id }, cancellationToken);
             return NoContent();
         }
 
-        [HttpDelete("/palettes/{id:guid}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             await mediator.Send(new DeletePaletteCommand(id), cancellationToken);

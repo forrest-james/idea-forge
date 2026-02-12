@@ -14,7 +14,7 @@
     <div class="card mb-4">
         <div class="card-header">Create App</div>
         <div class="card-body">
-            <form asp-controller="AppIdeasUi" asp-action="Create" method="post">
+            <form method="post" action="/app-ideas">
                 @Html.AntiForgeryToken()
                 <div class="row g-3">
                     <div class="col-md-3">
@@ -106,11 +106,9 @@
                 <h5 class="modal-title">Update App Idea</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form asp-controller="AppIdeasUi" asp-action="Update" method="post">
+            <form method="post" id="editAppIdeaForm">
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
-                    <input type="hidden" name="id" id="editAppIdeaId" />
-
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label">Type</label>
@@ -156,9 +154,8 @@
                 <div class="modal-body">This will permanently delete the app idea. If it is referenced by any challenges, the deletion may be blocked.</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form asp-controller="AppIdeasUi" asp-action="Delete" method="post" class="m-0">
+                    <form method="post" id="deleteAppIdeaForm" class="m-0">
                         @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" id="deleteAppIdeaId" value="" />
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </div>
@@ -172,18 +169,21 @@
         const editModal = document.getElementById('editAppIdeaModal');
         editModal?.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
+            const id = button.getAttribute('data-appidea.id');
 
-            document.getElementById('editAppIdeaId').value = button.getAttribute('data-appidea-id');
             document.getElementById('editType').value = button.getAttribute('data-type');
             document.getElementById('editCategory').value = button.getAttribute('data-category');
             document.getElementById('editDescription').value = button.getAttribute('data-description');
+            document.getElementById('editAppIdeaForm').action = `/app-ideas/${id}/update`;
+
         });
 
         // Delete modal
         const deleteModal = document.getElementById('confirmDeleteAppIdeaModal');
         deleteModal?.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
-            document.getElementById('deleteAppIdeaId').value = button.getAttribute('data-appidea-id');
+            const id = button.getAttribute('data-appidea-id');
+            document.getElementById('deleteAppIdeaForm').action = `/app-ideas/${id}/delete`;
         });
     </script>
 }

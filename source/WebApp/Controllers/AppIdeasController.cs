@@ -8,23 +8,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers
 {
+    [ApiController]
+    [Route("api/app-ideas")]
     public sealed class AppIdeasController : Controller
     {
-        [HttpGet("/app-ideas")]
+        [HttpGet]
         public async Task<IActionResult> List([FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var items = await mediator.Send(new ListAppIdeasQuery(), cancellationToken);
             return Ok(items);
         }
 
-        [HttpPost("/app-ideas")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateAppIdeaCommand command, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 
-        [HttpGet("/app-ideas/{id:guid}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var item = await mediator.Send(new GetAppIdeaQuery(id), cancellationToken);
@@ -33,14 +35,14 @@ namespace WebApp.Controllers
                 : Ok(item);
         }
 
-        [HttpPut("/app-ideas/{id:guid}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAppIdeaCommand command, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             await mediator.Send(command with { Id = id }, cancellationToken);
             return NoContent();
         }
 
-        [HttpDelete("/app-ideas/{id:guid}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             await mediator.Send(new DeleteAppIdeaCommand(id), cancellationToken);

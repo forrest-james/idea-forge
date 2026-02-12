@@ -6,23 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers
 {
+    [ApiController]
+    [Route("api/submissions")]
     public sealed class SubmissionsController : Controller
     {
-        [HttpPost("/submissions")]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateSubmissionCommand command, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var result =  await mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 
-        [HttpGet("/submissions/{id:guid}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var item = await mediator.Send(new GetSubmissionQuery(id), cancellationToken);
             return item is null ? NotFound() : Ok(item);
         }
 
-        [HttpGet("/submissions")]
+        [HttpGet]
         public async Task<IActionResult> List([FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             var items = await mediator.Send(new ListSubmissionsQuery(), cancellationToken);

@@ -9,12 +9,13 @@ using WebApp.ViewModels.Palettes;
 
 namespace WebApp.Controllers
 {
+    [Route("palettes")]
     public sealed class PalettesUiController : Controller
     {
         private readonly IMediator _mediator;
         public PalettesUiController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet]
+        [HttpGet("")]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             var palettes = await _mediator.Send(new ListPaletteQuery(), cancellationToken);
@@ -51,7 +52,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost("random")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GenerateRandom(CancellationToken cancellationToken)
         {
@@ -59,7 +60,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost("{id:guid}/update")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(Guid Id, string primaryColor, string secondaryColor, string accentColor, CancellationToken cancellationToken)
         {
@@ -74,7 +75,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost("{id:guid}/delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {

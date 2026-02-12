@@ -9,6 +9,7 @@ using WebApp.ViewModels.AppIdeas;
 
 namespace WebApp.Controllers
 {
+    [Route("app-ideas")]
     public sealed class AppIdeasUiController : Controller
     {
         private readonly IMediator _mediator;
@@ -48,7 +49,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost("{id:guid}/update")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(Guid id, string type, string category, string description, CancellationToken cancellationToken)
         {
@@ -62,7 +63,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost("{id:guid}/delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
