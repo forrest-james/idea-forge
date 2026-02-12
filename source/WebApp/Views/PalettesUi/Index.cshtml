@@ -84,9 +84,16 @@
                                 <td><code>@p.PrimaryColor</code></td>
                                 <td><code>@p.SecondaryColor</code></td>
                                 <td><code>@p.AccentColor</code></td>
-                                <td class="text-end">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editPaletteModal" data-palette-id="@p.Id" data-primary="@p.PrimaryColor" data-secondary="@p.SecondaryColor" data-accent="@p.AccentColor">Update</button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-palette-id="@p.Id">Delete</button>
+                                <td class="text-end">                                    
+                                    @if (p.IsInUse)
+                                    {
+                                        <span class="badge text-bg-secondary ms-2">In use</span>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editPaletteModal" data-palette-id="@p.Id" data-primary="@p.PrimaryColor" data-secondary="@p.SecondaryColor" data-accent="@p.AccentColor">Update</button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-palette-id="@p.Id">Delete</button>
+                                    }
                                 </td>
                             </tr>
                         }

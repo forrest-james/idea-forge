@@ -15,5 +15,6 @@
         public string PrimaryColor { get; init; } = "";
         public string SecondaryColor { get; init; } = "";
         public string AccentColor { get; init; } = "";
+        public bool IsInUse { get; init; } = false;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.Features.Palettes.Commands.CreatePalette;
 using Application.Features.Palettes.Commands.DeletePalette;
 using Application.Features.Palettes.Commands.UpdatePalette;
+using Application.Features.Palettes.Queries.GetPaletteIdsInUse;
 using Application.Features.Palettes.Queries.ListPalettes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             var palettes = await _mediator.Send(new ListPaletteQuery(), cancellationToken);
+            var inUsePaletteIds = await _mediator.Send(new GetPaletteIdsInUseQuery(), cancellationToken);
 
             var vm = new PalettesIndexVm
             {
@@ -26,7 +28,8 @@ namespace WebApp.Controllers
                     Id = p.Id,
                     PrimaryColor = p.PrimaryColor,
                     SecondaryColor = p.SecondaryColor,
-                    AccentColor = p.AccentColor
+                    AccentColor = p.AccentColor,
+                    IsInUse = inUsePaletteIds.Contains(p.Id)
                 })
                 .ToList()
             };
