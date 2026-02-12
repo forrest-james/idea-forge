@@ -1,0 +1,133 @@
+﻿@model WebApp.ViewModels.Palettes.PalettesIndexVm
+@{
+    ViewData["Title"] = "Palettes";
+}
+
+<div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h1 class="h3 mb-0">Palettes</h1>
+        <form asp-controller="PalettesUi" asp-action="GenerateRandom" method="post" class="m-0">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-primary">Generate Random Palette</button>
+        </form>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">Create Palette</div>
+        <div class="card-body">
+            <form asp-controller=""PalettesUi" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">Primary</label>
+                        <div class="d-flex gap-2 align-items-center">
+                            <input type="color" class="form-control form-control-color" asp-for="PrimaryColor" />
+                            <input type="text" class="form-control" asp-for="PrimaryColor" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Secondary</label>
+                        <div class="d-flex gap-2 align-items-center">
+                            <input type="color" class="form-control form-control-color" asp-for="SecondaryColor" />
+                            <input type="text" class="form-control" asp-for="SecondaryColor" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Accent</label>
+                        <div class="d-flex gap-2 align-items-center">
+                            <input type="color" class="form-control form-control-color" asp-for="AccentColor" />
+                            <input type="text" class="form-control" asp-for="AccentColor" />
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Create Palette</button>
+                    </div>
+                </div>
+
+                <div class="form-text mt-2">Tip: You can type hex values (e.g., #1F2937) or use the color pickers.</div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Existing Palettes (@Model.Palettes.Count)</div>
+        <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 140px;">Preview</th>
+                        <th>Primary</th>
+                        <th>Secondary</th>
+                        <th>Accent</th>
+                        <th style="width: 180px;" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Palettes.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5" class="text-muted">No palettes yet. Create one above or generate random palettes.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var p in Model.Palettes)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <div title="@p.PrimaryColor" style="width:28px;height:28px;border:1px solid #ccc;background:@p.PrimaryColor;"></div>
+                                        <div title="@p.SecondaryColor" style="width:28px;height:28px;border:1px solid #ccc;background:@p.SecondaryColor;"></div>
+                                        <div title="@p.AccentColor" style="width:28px;height:28px;border:1px solid #ccc;background:@p.AccentColor;"></div>
+                                    </div>
+                                </td>
+                                <td><code>@p.PrimaryColor</code></td>
+                                <td><code>@p.SecondaryColor</code></td>
+                                <td><code>@p.AccentColor</code></td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled>Update</button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-palette-id="@p.Id">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete palette?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                This will permanently delete the palette. If it is referenced by any challenge, the deletion may be blocked.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-controller="PalettesUi" asp-action="Delete" method="post" class="m-0">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="deletePaletteId" value="" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const modal = document.getElementById('confirmDeleteModal');
+        modal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-palette-id');
+            document.getElementById('deletePaletteId').value = id;
+        });
+    </script>
+}
