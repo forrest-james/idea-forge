@@ -1,4 +1,5 @@
 ﻿using Application.Features.Challenges.Commands.CreateChallenge;
+using Application.Features.Challenges.Commands.UpdateChallengeName;
 using Application.Features.Challenges.Queries.GetChallenge;
 using Application.Features.Challenges.Queries.ListChallenges;
 using Application.Features.Submissions.Queries.ListSubmissionsByChallenge;
@@ -66,6 +67,14 @@ namespace WebApp.Controllers
         {
             var created = await _mediator.Send(new CreateChallengeCommand(), cancellationToken);
             return RedirectToAction(nameof(Details), new { id = created.ChallengeId });
+        }
+
+        [HttpPost("{id:guid}/rename")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Rename(Guid id, string name, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new UpdateChallengeNameCommand(id, name), cancellationToken);
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }

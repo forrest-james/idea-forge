@@ -1,4 +1,6 @@
-﻿namespace Data.Models
+﻿using Data.Exceptions;
+
+namespace Data.Models
 {
     public class Challenge
     {
@@ -15,6 +17,13 @@
             Name = name;
             AppIdea = appIdea;
             Palette = palette;
+        }
+
+        public void Rename(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new DomainException("Name is required.");
+            Name = name.Trim();
         }
     }
 }
