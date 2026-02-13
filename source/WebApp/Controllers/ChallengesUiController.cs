@@ -1,4 +1,5 @@
-﻿using Application.Features.Challenges.Queries.GetChallenge;
+﻿using Application.Features.Challenges.Commands.CreateChallenge;
+using Application.Features.Challenges.Queries.GetChallenge;
 using Application.Features.Challenges.Queries.ListChallenges;
 using Application.Features.Submissions.Queries.ListSubmissionsByChallenge;
 using MediatR;
@@ -57,6 +58,14 @@ namespace WebApp.Controllers
             };
 
             return View(vm);
+        }
+
+        [HttpPost("new")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> New(CancellationToken cancellationToken)
+        {
+            var created = await _mediator.Send(new CreateChallengeCommand(), cancellationToken);
+            return RedirectToAction(nameof(Details), new { id = created.ChallengeId });
         }
     }
 }
