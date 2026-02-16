@@ -2,6 +2,8 @@
 using Application.Features.Challenges.Commands.UpdateChallengeName;
 using Application.Features.Challenges.Queries.GetChallenge;
 using Application.Features.Challenges.Queries.ListChallenges;
+using Application.Features.Submissions.Commands.CreateSubmission;
+using Application.Features.Submissions.DTOs;
 using Application.Features.Submissions.Queries.ListSubmissionsByChallenge;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -75,6 +77,38 @@ namespace WebApp.Controllers
         {
             await _mediator.Send(new UpdateChallengeNameCommand(id, name), cancellationToken);
             return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost("{id:guid}/submissions")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateSubmission(Guid id, [FromForm] CreateSubmissionFormVm form, CancellationToken cancellationToken)
+        {
+            var urls = (form.ImageUrls ?? new List<string>())
+                .Where(u => !string.IsNullOrEmpty(u))
+                .Select(u => u.Trim())
+                .ToList();
+
+            if (string.IsNullOrWhiteSpace(form.Description))
+                throw new InvalidOperationException("Description is required.");
+
+            if (urls.Count == 0)
+                throw new InvalidOperationException("At least one image URL is required.");
+
+            var images = urls
+                .Select((url, idx) => new CreateSubmissionImageDto(url, idx))
+                .ToList()
+                .AsReadOnly();
+
+            var command = new CreateSubmissionCommand
+            (
+                ChallengeId: id,
+                Description: form.Description ?? "",
+                Images: images
+            );
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            return Redirect($"/submissions/{result.SubmissionId}");
         }
     }
 }
