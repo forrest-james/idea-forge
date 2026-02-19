@@ -1,4 +1,5 @@
 ﻿using Application.Features.Challenges.Commands.CreateChallenge;
+using Application.Features.Challenges.Commands.DeleteChallenge;
 using Application.Features.Challenges.Queries.GetChallenge;
 using Application.Features.Challenges.Queries.ListChallenges;
 using MediatR;
@@ -29,6 +30,13 @@ namespace WebApp.Controllers
         {
             var items = await mediator.Send(new ListChallengesQuery(), cancellationToken);
             return Ok(items);            
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
+        {
+            await mediator.Send(new DeleteChallengeCommand(id), cancellationToken);
+            return Ok();
         }
     }
 }

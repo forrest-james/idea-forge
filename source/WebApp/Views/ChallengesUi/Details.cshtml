@@ -12,7 +12,7 @@
         <div class="d-flex gap-2">
             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createSubmissionModal" data-challenge-id="@Model.Id">Add Submission</button>
             <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editChallengeNameModal" data-challenge-id="@Model.Id" data-challenge-name="@Model.Name">Edit Name</button>
-            <button class="btn btn-outline-danger" disabled>Delete Challenge</button>
+            <button class="btn btn-outline-danger" @(Model.Submissions.Count == 0 ? "" : "disabled") title="@(Model.Submissions.Count == 0 ? "Delete challenge" : "Cannot delete: has submissions")" data-bs-toggle="modal" data-bs-target="#confirmDeleteChallengeModal" data-challenge-id="@Model.Id">Delete</button>
         </div>
     </div>
     <div class="row g-3">
@@ -138,6 +138,25 @@
             </div>
         </div>
     </div>
+    <!-- Delete Challenge modal -->
+    <div class="modal fade" id="confirmDeleteChallengeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete challenge?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">This will permanently delete the challenge. This is only allowed if it has no submissions.</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post" id="deleteChallengeForm" class="m-0">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -150,13 +169,20 @@
 
             document.getElementById('challengeNameInput').value = name ?? '';
             document.getElementById('renameChallengeForm').action = `/challenges/${id}/rename`;
-        })
+        });
 
         const subModal = document.getElementById('createSubmissionModal');
         subModal?.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
             const id = button.getAttribute('data-challenge-id');
             document.getElementById('createSubmissionForm').action = `/challenges/${id}/submissions`;
-        })
+        });
+
+        const delModal = document.getElementById('confirmDeleteChallengeModal');
+        delModal?.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-challenge-id');
+            document.getElementById('deleteChallengeForm').action = `/challenges/${id}/delete`;
+        });
     </script>
 }

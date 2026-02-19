@@ -14,5 +14,6 @@
         public string PrimaryColor { get; init; } = "";
         public string SecondaryColor { get; init; } = "";
         public string AccentColor { get; init; } = "";
+        public bool IsDeletable { get; init; } = false;
     }
 }

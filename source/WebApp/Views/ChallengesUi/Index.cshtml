@@ -53,7 +53,15 @@
                                 </td>
                                 <td class="text-end">
                                     <a class="btn btn-sm btn-outline-primary" href="/challenges/@c.Id">View</a>
-                                    <button class="btn btn-sm btn-outline-danger" disabled>Delete</button>
+                                    @if(c.IsDeletable)
+                                    {
+                                        <button class="btn btn-sm btn-outline-danger" title="Delete challenge" data-bs-toggle="modal" data-bs-target="#confirmDeleteChallengeModal" data-challenge-id="@c.Id">Delete</button>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge text-bg-secondary ms-2">In use</span>
+                                    }
+                                    
                                 </td>
                             </tr>
                         }
@@ -62,4 +70,34 @@
             </table>
         </div>
     </div>
+    <div class="modal fade" id="confirmDeleteChallengeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete challenge?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">This will permanently delete the challenge. This is only allowed if it has no submissions.</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post" id="deleteChallengeForm" class="m-0">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        const delModal = document.getElementById('confirmDeleteChallengeModal');
+        delModal?.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-challenge-id');
+            document.getElementById('deleteChallengeForm').action = `/challenges/${id}/delete`;
+        });
+    </script>
+}

@@ -1,6 +1,8 @@
 ﻿using Application.Features.Challenges.Commands.CreateChallenge;
+using Application.Features.Challenges.Commands.DeleteChallenge;
 using Application.Features.Challenges.Commands.UpdateChallengeName;
 using Application.Features.Challenges.Queries.GetChallenge;
+using Application.Features.Challenges.Queries.GetChallengeIdsWithSubmissions;
 using Application.Features.Challenges.Queries.ListChallenges;
 using Application.Features.Submissions.Commands.CreateSubmission;
 using Application.Features.Submissions.DTOs;
@@ -21,6 +23,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             var items = await _mediator.Send(new ListChallengesQuery(), cancellationToken);
+            var inUse = await _mediator.Send(new GetChallengeIdsWithSubmissionsQuery(), cancellationToken);
 
             var vm = new ChallengesIndexVm
             {
@@ -32,7 +35,8 @@ namespace WebApp.Controllers
                     AppCategory = c.AppCategory,                    
                     PrimaryColor = c.PrimaryColor,
                     SecondaryColor = c.SecondaryColor,
-                    AccentColor = c.AccentColor
+                    AccentColor = c.AccentColor,
+                    IsDeletable = !inUse.Contains(c.Id)
                 }).ToList()
             };
 
@@ -109,6 +113,14 @@ namespace WebApp.Controllers
             var result = await _mediator.Send(command, cancellationToken);
 
             return Redirect($"/submissions/{result.SubmissionId}");
+        }
+
+        [HttpPost("{id:guid}/delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new DeleteChallengeCommand(id), cancellationToken);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
