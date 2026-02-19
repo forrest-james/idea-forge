@@ -1,4 +1,5 @@
-﻿using Application.Features.Submissions.Queries.GetSubmission;
+﻿`using Application.Features.Submissions.Commands.UploadSubmissionImages;
+using Application.Features.Submissions.Queries.GetSubmission;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels.Submissions;
@@ -36,6 +37,22 @@ namespace WebApp.Controllers
             };
 
             return View(vm);
+        }
+
+        [HttpPost("{id:guid}/images")]
+        [ValidateAntiForgeryToken]
+        [RequestSizeLimit(50 * 1024 * 1024)]
+        public async Task<IActionResult> UploadImages(Guid id, List<IFormFile> files, CancellationToken cancellationToken)
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            await _mediator.Send(new UploadSubmissionImagesCommand(
+                SubmissionId: id,
+                Files: files,
+                BaseUrl: baseUrl
+                ), cancellationToken);
+
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }

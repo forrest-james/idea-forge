@@ -1,4 +1,5 @@
 ﻿using Application.Features.Submissions.Commands.CreateSubmission;
+using Application.Features.Submissions.Commands.UploadSubmissionImages;
 using Application.Features.Submissions.Queries.GetSubmission;
 using Application.Features.Submissions.Queries.ListSubmissions;
 using MediatR;
@@ -8,7 +9,7 @@ namespace WebApp.Controllers
 {
     [ApiController]
     [Route("api/submissions")]
-    public sealed class SubmissionsController : Controller
+    public sealed class SubmissionsController : ControllerBase
     {
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateSubmissionCommand command, [FromServices] IMediator mediator, CancellationToken cancellationToken)
@@ -29,6 +30,21 @@ namespace WebApp.Controllers
         {
             var items = await mediator.Send(new ListSubmissionsQuery(), cancellationToken);
             return Ok(items);
+        }
+
+        [HttpPost("{id:guid}/images")]
+        [RequestSizeLimit(50 * 1024 * 1024)] // Total request cap (50MB)
+        public async Task<IActionResult> UploadImages(Guid id, [FromForm] List<IFormFile> files, [FromServices] IMediator mediator, CancellationToken cancellationToken)
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            await mediator.Send(new UploadSubmissionImagesCommand(
+                SubmissionId: id,
+                Files: files,
+                BaseUrl: baseUrl
+                ), cancellationToken);
+
+            return NoContent();
         }
     }
 }
