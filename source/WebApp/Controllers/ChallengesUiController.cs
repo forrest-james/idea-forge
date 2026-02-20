@@ -1,10 +1,12 @@
-﻿using Application.Features.Challenges.Commands.CreateChallenge;
+﻿using Application.Common.Interfaces;
+using Application.Features.Challenges.Commands.CreateChallenge;
 using Application.Features.Challenges.Commands.DeleteChallenge;
 using Application.Features.Challenges.Commands.UpdateChallengeName;
 using Application.Features.Challenges.Queries.GetChallenge;
 using Application.Features.Challenges.Queries.GetChallengeIdsWithSubmissions;
 using Application.Features.Challenges.Queries.ListChallenges;
 using Application.Features.Submissions.Commands.CreateSubmission;
+using Application.Features.Submissions.Commands.UploadSubmissionImages;
 using Application.Features.Submissions.DTOs;
 using Application.Features.Submissions.Queries.ListSubmissionsByChallenge;
 using MediatR;
@@ -87,32 +89,32 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubmission(Guid id, [FromForm] CreateSubmissionFormVm form, CancellationToken cancellationToken)
         {
-            var urls = (form.ImageUrls ?? new List<string>())
-                .Where(u => !string.IsNullOrEmpty(u))
-                .Select(u => u.Trim())
-                .ToList();
-
-            if (string.IsNullOrWhiteSpace(form.Description))
-                throw new InvalidOperationException("Description is required.");
-
-            if (urls.Count == 0)
-                throw new InvalidOperationException("At least one image URL is required.");
-
-            var images = urls
-                .Select((url, idx) => new CreateSubmissionImageDto(url, idx))
-                .ToList()
-                .AsReadOnly();
-
-            var command = new CreateSubmissionCommand
-            (
+            var createResult = await _mediator.Send(new CreateSubmissionCommand(
                 ChallengeId: id,
                 Description: form.Description ?? "",
-                Images: images
-            );
+                Images: Array.Empty<CreateSubmissionImageDto>()
+                ), cancellationToken);
 
-            var result = await _mediator.Send(command, cancellationToken);
+            var files = form.Files?.Where(f => f is not null && f.Length > 0).ToList() ?? new();
+            if (files.Count > 0)
+            {
+                var uploads = files
+                    .Select(f => new ImageUpload(
+                        FileName: f.FileName,
+                        Content: f.OpenReadStream()))
+                    .ToList()
+                    .AsReadOnly();
 
-            return Redirect($"/submissions/{result.SubmissionId}");
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+                await _mediator.Send(new UploadSubmissionImagesCommand(
+                    SubmissionId: createResult.SubmissionId,
+                    Files: uploads,
+                    BaseUrl: baseUrl
+                    ), cancellationToken);
+            }
+
+            return Redirect($"/submissions/{createResult.SubmissionId}");
         }
 
         [HttpPost("{id:guid}/delete")]

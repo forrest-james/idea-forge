@@ -114,21 +114,18 @@
                     <h5 class="modal-title">Add Submission</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="post" id="createSubmissionForm">
+                <form method="post" id="createSubmissionForm" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">Description</label>
                             <textarea class="form-control" name="Description" rows="5" placeholder="Design thoughts, rationale, constraints, etc."></textarea>
                         </div>
-                        <div class="row g-2">
-                            @for(var i = 0; i < 5; i++)
-                                {
-                                    <div class="col-12">
-                                        <input class="form-control" name="ImageUrls[@i]" placeholder="Image URL @(i+1) (https://...)" />
-                                    </div>
-                                }
-                            </div>
+                        <div class="mb-2">
+                            <label class="form-label">Images (optional)</label>
+                            <input type="file" class="form-control" name="Files" multiple accept=".jpg,.jpeg,.png,.webp" />
+                            <div class="form-text">You can create a submission without images and upload later.</div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>

@@ -3,6 +3,6 @@
     public sealed class CreateSubmissionFormVm
     {
         public string Description { get; set; } = "";
-        public List<string> ImageUrls { get; set; } = new();
+        public List<IFormFile> Files { get; set; } = new();
     }
 }
