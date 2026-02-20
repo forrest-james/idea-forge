@@ -1,4 +1,5 @@
-﻿`using Application.Features.Submissions.Commands.UploadSubmissionImages;
+﻿using Application.Common.Interfaces;
+using Application.Features.Submissions.Commands.UploadSubmissionImages;
 using Application.Features.Submissions.Queries.GetSubmission;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -44,11 +45,18 @@ namespace WebApp.Controllers
         [RequestSizeLimit(50 * 1024 * 1024)]
         public async Task<IActionResult> UploadImages(Guid id, List<IFormFile> files, CancellationToken cancellationToken)
         {
+            var uploads = files
+                .Where(f => f.Length > 0)
+                .Select(f => new ImageUpload(
+                    FileName: f.FileName,
+                    Content: f.OpenReadStream()))
+                .ToList();
+
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
             await _mediator.Send(new UploadSubmissionImagesCommand(
                 SubmissionId: id,
-                Files: files,
+                Files: uploads,
                 BaseUrl: baseUrl
                 ), cancellationToken);
 

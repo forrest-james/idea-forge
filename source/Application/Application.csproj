@@ -12,16 +12,12 @@
 
   <ItemGroup>
     <Folder Include="Common\Behaviors\" />
-    <Folder Include="Common\Interfaces\" />
     <Folder Include="Common\Models\" />
     <Folder Include="Features\Submissions\Commands\DeleteSubmission\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="14.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.3.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.9" />
   </ItemGroup>
 
 </Project>

@@ -11,7 +11,7 @@ namespace Data.Models
 
         private Image() { }
 
-        internal Image(Guid submissionId, ImageUrl url, int order)
+        public Image(Guid submissionId, ImageUrl url, int order)
         {
             Id = Guid.NewGuid();
             SubmissionId = submissionId;
@@ -19,7 +19,7 @@ namespace Data.Models
             Order = order;
         }
 
-        internal void SetOrder(int order)
+        public void SetOrder(int order)
         {
             Order = order;
         }

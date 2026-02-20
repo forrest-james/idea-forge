@@ -1,7 +1,9 @@
+using Application.Common.Interfaces;
 using Data.EF;
 using Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Middleware;
+using WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +12,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IdeaForge_Local;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30"));
+{
+    options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IdeaForge_Local;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30");
+    options.EnableSensitiveDataLogging();
+    options.LogTo(Console.WriteLine);
+});
 
 builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
+builder.Services.AddScoped<IImageStorage, LocalImageStorage>();
 
 builder.Services.AddMediatR(config =>
     config.RegisterServicesFromAssembly(typeof(Application.AssemblyMarker).Assembly));

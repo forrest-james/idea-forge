@@ -1,4 +1,5 @@
-﻿using Application.Features.Submissions.Commands.CreateSubmission;
+﻿using Application.Common.Interfaces;
+using Application.Features.Submissions.Commands.CreateSubmission;
 using Application.Features.Submissions.Commands.UploadSubmissionImages;
 using Application.Features.Submissions.Queries.GetSubmission;
 using Application.Features.Submissions.Queries.ListSubmissions;
@@ -36,11 +37,18 @@ namespace WebApp.Controllers
         [RequestSizeLimit(50 * 1024 * 1024)] // Total request cap (50MB)
         public async Task<IActionResult> UploadImages(Guid id, [FromForm] List<IFormFile> files, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
+            var uploads = files
+                .Where(f => f.Length > 0)
+                .Select(f => new ImageUpload(
+                    FileName: f.FileName,
+                    Content: f.OpenReadStream()))
+                .ToList();
+
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
             await mediator.Send(new UploadSubmissionImagesCommand(
                 SubmissionId: id,
-                Files: files,
+                Files: uploads,
                 BaseUrl: baseUrl
                 ), cancellationToken);
 
