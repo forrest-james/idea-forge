@@ -28,6 +28,30 @@ namespace WebApp.Services
             return results;
         }
 
+        public Task DeleteByAbsoluteUrl(string absoluteUrl, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(absoluteUrl))
+                return Task.CompletedTask;
+
+            if (!Uri.TryCreate(absoluteUrl, UriKind.Absolute, out var uri))
+                return Task.CompletedTask;
+
+            var path = uri.AbsolutePath;
+            if (string.IsNullOrWhiteSpace(path))
+                return Task.CompletedTask;
+
+            if (!path.StartsWith("/images/", StringComparison.OrdinalIgnoreCase))
+                return Task.CompletedTask;
+
+            var relative = path.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+            var physicalPath = Path.Combine(_environment.WebRootPath, relative);
+
+            if (File.Exists(physicalPath))
+                File.Delete(physicalPath);
+
+            return Task.CompletedTask;
+        }
+
         private static string CreateShortId()
         {
             Span<byte> bytes = stackalloc byte[8];

@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Features.Submissions.Commands.RemoveSubmissionImage;
 using Application.Features.Submissions.Commands.UploadSubmissionImages;
 using Application.Features.Submissions.Queries.GetSubmission;
 using MediatR;
@@ -58,6 +59,18 @@ namespace WebApp.Controllers
                 SubmissionId: id,
                 Files: uploads,
                 BaseUrl: baseUrl
+                ), cancellationToken);
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost("{id:guid}/images/{imageId:guid}/delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteImage(Guid id, Guid imageId, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new RemoveSubmissionImageCommand(
+                SubmissionId: id,
+                ImageId: imageId
                 ), cancellationToken);
 
             return RedirectToAction(nameof(Details), new { id });

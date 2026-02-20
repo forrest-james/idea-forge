@@ -57,6 +57,7 @@
                                     <div class="mt-2 text-break small">
                                         <a href="@img.ImageUrl" target="_blank" rel="noreferrer">@img.ImageUrl</a>
                                     </div>
+                                    <button type="button" class="btn btn-sm btn-outline-danger mt-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteImageModal" data-submission-id="@Model.Id" data-image-id="@img.Id">Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -68,4 +69,37 @@
     <div class="mt-3">
         <a href="/challenges/@Model.ChallengeId" class="btn btn-link">← Back to Challenge</a>
     </div>
+    <!-- Delete image modal -->
+    <div class="modal fade" id="confirmDeleteImageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete image?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">This will remove the image from the submission.</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post" id="deleteImageForm" class="m-0">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        const deleteImageModal = document.getElementById('confirmDeleteImageModal');
+        deleteImageModal?.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const submissionId = button.getAttribute('data-submission-id');
+            const imageId = button.getAttribute('data-image-id');
+
+            document.getElementById('deleteImageForm').action = `/submissions/${submissionId}/images/${imageId}/delete`;
+        });
+    </script>
+}
