@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Features.Submissions.Commands.CreateSubmission;
+using Application.Features.Submissions.Commands.DeleteSubmission;
 using Application.Features.Submissions.Commands.RemoveSubmissionImage;
 using Application.Features.Submissions.Commands.UploadSubmissionImages;
 using Application.Features.Submissions.Queries.GetSubmission;
@@ -60,6 +61,13 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteImage(Guid id, Guid imageId, [FromServices] IMediator mediator, CancellationToken cancellationToken)
         {
             await mediator.Send(new RemoveSubmissionImageCommand(id, imageId), cancellationToken);
+            return NoContent();
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, [FromServices] IMediator mediator, CancellationToken cancellationToken)
+        {
+            await mediator.Send(new DeleteSubmissionCommand(id), cancellationToken);
             return NoContent();
         }
     }

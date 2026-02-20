@@ -14,6 +14,10 @@
             </div>
         </div>
         <div class="d-flex gap-2">
+            @if (Model.Images.Count == 0)
+            {
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteSubmissionModal" data-submission-id="@Model.Id">Delete Submission</button>
+            }
             <form method="post" action="/submissions/@Model.Id/images" enctype="multipart/form-data" class="d-flex gap-2">
                 @Html.AntiForgeryToken()
                 <input type="file" name="files" multiple accept=".jpg,.jpeg,.png,.webp" class="form-control" />
@@ -88,6 +92,25 @@
             </div>
         </div>
     </div>
+    <!-- Delete submission modal -->
+    <div class="modal fade" id="confirmDeleteSubmissionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete submission?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">This will permanently delete the submission. This is only allowed if it has no images.</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post" id="deleteSubmissionForm" class="m-0">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts
@@ -100,6 +123,13 @@
             const imageId = button.getAttribute('data-image-id');
 
             document.getElementById('deleteImageForm').action = `/submissions/${submissionId}/images/${imageId}/delete`;
+        });
+
+        const delSubModal = document.getElementById('confirmDeleteSubmissionModal');
+        delSubModal?.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-submission-id');
+            document.getElementById('deleteSubmissionForm').action = `/submissions/${id}/delete`;
         });
     </script>
 }

@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Features.Submissions.Commands.DeleteSubmission;
 using Application.Features.Submissions.Commands.RemoveSubmissionImage;
 using Application.Features.Submissions.Commands.UploadSubmissionImages;
 using Application.Features.Submissions.Queries.GetSubmission;
@@ -74,6 +75,18 @@ namespace WebApp.Controllers
                 ), cancellationToken);
 
             return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost("{id:guid}/delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            var dto = await _mediator.Send(new GetSubmissionQuery(id), cancellationToken);
+            if (dto is null) return NotFound();
+
+            await _mediator.Send(new DeleteSubmissionCommand(id), cancellationToken);
+
+            return Redirect($"/challenges/{dto.Challenge.Id}");
         }
     }
 }
