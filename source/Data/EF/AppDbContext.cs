@@ -2,6 +2,7 @@
 using Data.Models;
 using Data.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Data.EF
 {
@@ -41,6 +42,9 @@ namespace Data.EF
                       .WithOne()
                       .HasForeignKey(i => i.SubmissionId)
                       .OnDelete(DeleteBehavior.Cascade);
+                entity.Navigation(e => e.Images)
+                    .HasField("_images")
+                    .UsePropertyAccessMode(PropertyAccessMode.Field);
             });
 
             modelBuilder.Entity<Image>(entity =>
@@ -56,7 +60,15 @@ namespace Data.EF
                         .HasColumnName("Url")
                         .IsRequired();
                 });
-            });        
+            });
+
+            modelBuilder.Entity<Submission>()
+                .Property(e => e.Id)
+                .ValueGeneratedNever();
+
+            modelBuilder.Entity<Image>()
+                .Property(e => e.Id)
+                .ValueGeneratedNever();
         }
     }
 }
