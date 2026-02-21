@@ -1,13 +1,16 @@
 ﻿using Data.Converters;
 using Data.Models;
 using Data.Persistence;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Data.EF
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IAppDbContext
+    public class AppDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>, IAppDbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
         public DbSet<AppIdea> AppIdeas => Set<AppIdea>();
         public DbSet<Palette> Palettes => Set<Palette>();
         public DbSet<Challenge> Challenges => Set<Challenge>();
