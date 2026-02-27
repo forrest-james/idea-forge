@@ -4,11 +4,13 @@ using Application.Features.Submissions.Commands.RemoveSubmissionImage;
 using Application.Features.Submissions.Commands.UploadSubmissionImages;
 using Application.Features.Submissions.Queries.GetSubmission;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels.Submissions;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     [Route("submissions")]
     public class SubmissionsUiController : Controller
     {

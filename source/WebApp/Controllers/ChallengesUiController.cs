@@ -10,11 +10,13 @@ using Application.Features.Submissions.Commands.UploadSubmissionImages;
 using Application.Features.Submissions.DTOs;
 using Application.Features.Submissions.Queries.ListSubmissionsByChallenge;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels.Challenges;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     [Route("")]
     [Route("challenges")]
     public sealed class ChallengesUiController : Controller

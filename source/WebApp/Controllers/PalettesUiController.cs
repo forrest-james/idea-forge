@@ -4,11 +4,13 @@ using Application.Features.Palettes.Commands.UpdatePalette;
 using Application.Features.Palettes.Queries.GetPaletteIdsInUse;
 using Application.Features.Palettes.Queries.ListPalettes;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels.Palettes;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     [Route("palettes")]
     public sealed class PalettesUiController : Controller
     {

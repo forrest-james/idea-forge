@@ -4,11 +4,13 @@ using Application.Features.AppIdeas.Commands.UpdateAppIdea;
 using Application.Features.AppIdeas.Queries.GetAppIdeaIdsInUse;
 using Application.Features.AppIdeas.Queries.ListAppIdeas;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels.AppIdeas;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     [Route("app-ideas")]
     public sealed class AppIdeasUiController : Controller
     {
