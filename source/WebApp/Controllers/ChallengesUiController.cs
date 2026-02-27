@@ -15,6 +15,7 @@ using WebApp.ViewModels.Challenges;
 
 namespace WebApp.Controllers
 {
+    [Route("")]
     [Route("challenges")]
     public sealed class ChallengesUiController : Controller
     {

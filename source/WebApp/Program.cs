@@ -65,7 +65,7 @@ app.UseStaticFiles();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Challenges}/{action=Index}")
     .WithStaticAssets();
 
 app.MapRazorPages();
