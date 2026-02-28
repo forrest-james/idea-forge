@@ -120,7 +120,7 @@ namespace WebApp.Controllers
             return Redirect($"/submissions/{createResult.SubmissionId}");
         }
 
-        [Authorize(Roles = "Admin,Standard")]
+        [Authorize(Roles = "Admin")]
         [HttpPost("{id:guid}/delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
