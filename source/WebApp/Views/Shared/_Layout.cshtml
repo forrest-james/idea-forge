@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using Data.Identity
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8" />
@@ -11,7 +13,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="ChallengesUi" asp-action="Index" style="color:#F29800">IdeaForge</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -30,20 +32,35 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="AppIdeasUi" asp-action="Index">App Ideas</a>
                         </li>
                     </ul>
-                </div>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav ms-auto">
                         <li>
                             @if (User?.Identity?.IsAuthenticated ?? false)
                             {
-                                 <form method="post" action="/account/logout" class="d-inline">
-                                     @Html.AntiForgeryToken()
-                                     <button type="submit" class="btn btn-sm btn-outline-secondary">Logout</button>
-                                 </form>   
+                                var username = User.Identity?.Name ?? "User";
+                                string role =
+                                    User.IsInRole(Roles.Admin) ? Roles.Admin :
+                                    User.IsInRole(Roles.Standard) ? Roles.Standard :
+                                    User.IsInRole(Roles.Test) ? Roles.Test :
+                                    "User";
+                                string roleClass = 
+                                    role == Roles.Admin ? "text-bg-warning" :
+                                    role == Roles.Standard ? "text-bg-primary" :
+                                    role == Roles.Test ? "text-bg-secondary" :
+                                    "text-bg-secondary";
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="d-flex flex-column  lh-1">
+                                        <span class="text-light small fw-semibold">@username</span>
+                                        <span class="badge @roleClass align-self-start mt-1">@role</span>
+                                    </div>                                
+                                    <form method="post" action="/account/logout" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="nav-link btn btn-link p-0 text-light">Logout</button>
+                                    </form>
+                                </div>
                             }
                             else
                             {
-                                    <a class="btn btn-sm btn-outline-primary" href="/account/login">Login</a>
+                                <a class="nav-link text-light" href="/account/login">Login</a>
                             }
                         </li>
                     </ul>
