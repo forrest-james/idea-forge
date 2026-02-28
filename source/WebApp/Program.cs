@@ -8,26 +8,31 @@ using WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// MVC
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IdeaForge_Local;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30");
-    options.EnableSensitiveDataLogging();
-    options.LogTo(Console.WriteLine);
-});
+// Middleware
+builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 
+// DbContext
+var connString = builder.Configuration.GetConnectionString("Default")
+    ?? @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IdeaForge_Local;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
+
+builder.Services.AddDbContext<AppDbContext>(options => { options.UseSqlServer(connString); });
+
+// Application ports
 builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 builder.Services.AddScoped<IImageStorage, LocalImageStorage>();
 
+// MediatR
 builder.Services.AddMediatR(config =>
     config.RegisterServicesFromAssembly(typeof(Application.AssemblyMarker).Assembly));
 
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Identity
 builder.Services
     .AddDefaultIdentity<IdentityUser>(options =>
     {
@@ -36,8 +41,6 @@ builder.Services
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
-
-builder.Services.AddRazorPages();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -48,9 +51,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
+// Global exception handling
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     await IdentitySeeder.SeedAsync(app.Services);
@@ -58,23 +61,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 else
-{    
+{
     app.UseHsts();
 }
 
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
-app.UseStaticFiles();
-
+// Routes
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Challenges}/{action=Index}")
-    .WithStaticAssets();
-
-app.MapRazorPages();
+    pattern: "{controller=Challenges}/{action=Index}/{id?}"
+);
 
 app.Run();
