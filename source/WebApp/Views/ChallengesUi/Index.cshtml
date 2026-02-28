@@ -1,7 +1,9 @@
-﻿
+﻿@using Data.Identity
+
 @model WebApp.ViewModels.Challenges.ChallengesIndexVm
 @{
     ViewData["Title"] = "Challenges";
+    var deleteDisabled = User.IsInRole(Roles.Test) || User.IsInRole(Roles.Standard);
 }
 
 <div class="container py-4">
@@ -55,7 +57,12 @@
                                     <a class="btn btn-sm btn-outline-primary" href="/challenges/@c.Id">View</a>
                                     @if(c.IsDeletable)
                                     {
-                                        <button class="btn btn-sm btn-outline-danger" title="Delete challenge" data-bs-toggle="modal" data-bs-target="#confirmDeleteChallengeModal" data-challenge-id="@c.Id">Delete</button>
+                                        <button class="btn btn-sm btn-outline-danger" 
+                                            disabled=@(deleteDisabled)
+                                            title=@(deleteDisabled ? "This role cannot delete challenges" : "Delete challenge")  
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#confirmDeleteChallengeModal" 
+                                            data-challenge-id="@c.Id">Delete</button>
                                     }
                                     else
                                     {

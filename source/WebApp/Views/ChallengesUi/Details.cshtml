@@ -1,6 +1,8 @@
-﻿@model WebApp.ViewModels.Challenges.ChallengeDetailsVm
+﻿@using Data.Identity
+@model WebApp.ViewModels.Challenges.ChallengeDetailsVm
 @{
-    ViewData["Title"] = Model.Name + " - Challenge Details"; 
+    ViewData["Title"] = Model.Name + " - Challenge Details";
+    var deleteDisabled = User.IsInRole(Roles.Test) || User.IsInRole(Roles.Standard);
 }
 
 <div class="container py-4">
@@ -12,7 +14,10 @@
         <div class="d-flex gap-2">
             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createSubmissionModal" data-challenge-id="@Model.Id">Add Submission</button>
             <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editChallengeNameModal" data-challenge-id="@Model.Id" data-challenge-name="@Model.Name">Edit Name</button>
-            <button class="btn btn-outline-danger" @(Model.Submissions.Count == 0 ? "" : "disabled") title="@(Model.Submissions.Count == 0 ? "Delete challenge" : "Cannot delete: has submissions")" data-bs-toggle="modal" data-bs-target="#confirmDeleteChallengeModal" data-challenge-id="@Model.Id">Delete</button>
+            <button class="btn btn-outline-danger" 
+                disabled = @(Model.Submissions.Count == 0 && !deleteDisabled) 
+                title=@((Model.Submissions.Count == 0 && !deleteDisabled) ? "Delete this challenge" : (Model.Submissions.Count == 0 ? "This role cannot delete Challenges" : "Cannot delete: has submissions")) 
+                data-bs-toggle="modal" data-bs-target="#confirmDeleteChallengeModal" data-challenge-id="@Model.Id">Delete</button>
         </div>
     </div>
     <div class="row g-3">

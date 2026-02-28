@@ -4,7 +4,8 @@
         Guid Id,
         string Description,
         ChallengeSummaryDto Challenge,
-        IReadOnlyList<SubmissionImageDto> Images
+        IReadOnlyList<SubmissionImageDto> Images,
+        string? CreatedBy
     );
 
     public sealed record SubmissionImageDto(

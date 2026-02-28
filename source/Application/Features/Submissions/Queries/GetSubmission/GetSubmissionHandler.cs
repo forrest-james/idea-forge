@@ -38,7 +38,8 @@ namespace Application.Features.Submissions.Queries.GetSubmission
                     Id: submission.Challenge.Id,
                     Name: submission.Challenge.Name
                 ),
-                Images: images
+                Images: images,
+                CreatedBy: submission.CreatedBy
             );
         }
     }

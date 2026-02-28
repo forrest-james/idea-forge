@@ -1,6 +1,8 @@
-﻿@model WebApp.ViewModels.Palettes.PalettesIndexVm
+﻿@using Data.Identity
+@model WebApp.ViewModels.Palettes.PalettesIndexVm
 @{
     ViewData["Title"] = "Palettes";
+    var deleteDisabled = User.IsInRole(Roles.Test) || User.IsInRole(Roles.Standard);
 }
 
 <div class="container py-4">
@@ -92,7 +94,10 @@
                                     else
                                     {
                                         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editPaletteModal" data-palette-id="@p.Id" data-primary="@p.PrimaryColor" data-secondary="@p.SecondaryColor" data-accent="@p.AccentColor">Update</button>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-palette-id="@p.Id">Delete</button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            disabled=@(deleteDisabled)
+                                            title=@(deleteDisabled ? "This role cannot delete palettes" : "Delete this palette")
+                                            data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-palette-id="@p.Id">Delete</button>
                                     }
                                 </td>
                             </tr>

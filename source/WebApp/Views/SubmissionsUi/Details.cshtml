@@ -1,6 +1,14 @@
-﻿@model WebApp.ViewModels.Submissions.SubmissionDetailsVm
+﻿@using Data.Identity
+@model WebApp.ViewModels.Submissions.SubmissionDetailsVm
 @{
     ViewData["Title"] = "Submission for " + Model.ChallengeName;
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var isOwner = !string.IsNullOrWhiteSpace(Model.CreatedBy) && Model.CreatedBy == currentUserId;
+    var isAdmin = User.IsInRole(Roles.Admin);
+    var isStandard = User.IsInRole(Roles.Standard);
+    var isTest = User.IsInRole(Roles.Test);
+
+    var hasNoImages = Model.Images.Count == 0;
 }
 
 <div class="container py-4">
@@ -16,7 +24,10 @@
         <div class="d-flex gap-2">
             @if (Model.Images.Count == 0)
             {
-                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteSubmissionModal" data-submission-id="@Model.Id">Delete Submission</button>
+                <button type="button" class="btn btn-outline-danger"
+                    disabled= @(isTest || (!isOwner && isStandard))
+                    title=@(isTest ? "This role cannot delete submissions" : (!isOwner && isStandard) ? "Only the submission owner can delete" : "Delete this submission")
+                    data-bs-toggle="modal" data-bs-target="#confirmDeleteSubmissionModal" data-submission-id="@Model.Id">Delete Submission</button>
             }
             <form method="post" action="/submissions/@Model.Id/images" enctype="multipart/form-data" class="d-flex gap-2">
                 @Html.AntiForgeryToken()

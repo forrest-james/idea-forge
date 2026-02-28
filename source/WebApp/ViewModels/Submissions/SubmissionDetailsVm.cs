@@ -8,6 +8,7 @@
         public string ChallengeName { get; init; } = "";
         public List<SubmissionImageVm> Images { get; init; } = new();
         public bool UploadDisabled { get; init; } = true;
+        public string? CreatedBy { get; init; }
     }
 
     public sealed class SubmissionImageVm

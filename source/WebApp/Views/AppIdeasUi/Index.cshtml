@@ -1,10 +1,12 @@
-﻿@using Data.Models
+﻿@using Data.Identity
+@using Data.Models
 @using Data.Enums
 @model WebApp.ViewModels.AppIdeas.AppIdeasIndexVm
 @{
     ViewData["Title"] = "App Ideas";
     var appTypes = Enum.GetNames(typeof(AppType));
     var categories = Enum.GetNames(typeof(AppCategory));
+    var deleteDisabled = User.IsInRole(Roles.Test) || User.IsInRole(Roles.Standard);
 }
 
 <div class="container py-4">
@@ -86,7 +88,13 @@
                                     else
                                     {
                                         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editAppIdeaModal" data-appidea.id="@a.Id" data-type="@a.Type" data-category="@a.Category" data-description="@a.Description">Update</button>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteAppIdeaModal" data-appidea-id="@a.Id">Delete</button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#confirmDeleteAppIdeaModal" 
+                                            data-appidea-id="@a.Id" 
+                                            disabled="@(deleteDisabled)" 
+                                            title= @(deleteDisabled ? "This role cannot delete App Ideas" : "Delete this App Idea")
+                                        >Delete</button>
                                     }
                                 </td>
                             </tr>
