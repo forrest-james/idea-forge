@@ -2,7 +2,7 @@
 
 namespace Data.Models
 {
-    public class Challenge
+    public class Challenge : AuditableEntity
     {
         public Guid Id { get; private set; }       
         public string Name { get; private set; }

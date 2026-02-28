@@ -3,7 +3,7 @@ using Data.ValueObjects;
 
 namespace Data.Models
 {
-    public class Submission
+    public class Submission : AuditableEntity
     {
         private readonly List<Image> _images = new();
 

@@ -72,6 +72,24 @@ namespace Data.EF
             modelBuilder.Entity<Image>()
                 .Property(e => e.Id)
                 .ValueGeneratedNever();
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (!typeof(AuditableEntity).IsAssignableFrom(entityType.ClrType))
+                        continue;
+
+                    modelBuilder.Entity(entityType.ClrType).Property(nameof(AuditableEntity.CreatedAtUtc))
+                        .IsRequired();
+                    modelBuilder.Entity(entityType.ClrType).Property(nameof(AuditableEntity.CreatedBy))
+                        .HasMaxLength(450);
+                    modelBuilder.Entity(entityType.ClrType).Property(nameof(AuditableEntity.LastModifiedAtUtc))
+                        .IsRequired(false);
+                    modelBuilder.Entity(entityType.ClrType).Property(nameof(AuditableEntity.LastModifiedBy))
+                        .HasMaxLength(450);
+                }
+            }
         }
     }
 }

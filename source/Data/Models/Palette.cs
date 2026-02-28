@@ -2,7 +2,7 @@
 
 namespace Data.Models
 {
-    public class Palette
+    public class Palette : AuditableEntity
     {
         public Guid Id { get; private set; }
         public HexColor PrimaryColor { get; private set; }

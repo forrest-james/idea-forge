@@ -2,7 +2,7 @@
 
 namespace Data.Models
 {
-    public class AppIdea
+    public class AppIdea : AuditableEntity
     {
         public Guid Id { get; private set; }
         public AppType Type { get; private set; }

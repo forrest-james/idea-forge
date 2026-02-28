@@ -18,11 +18,22 @@ builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 var connString = builder.Configuration.GetConnectionString("Default")
     ?? @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=IdeaForge_Local;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30";
 
-builder.Services.AddDbContext<AppDbContext>(options => { options.UseSqlServer(connString); });
+builder.Services.AddHttpContextAccessor();
 
 // Application ports
 builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 builder.Services.AddScoped<IImageStorage, LocalImageStorage>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<AuditingSaveChangesInterceptor>();
+
+builder.Services.AddSingleton<IClock, SystemClock>();
+
+builder.Services.AddDbContext<AppDbContext>((sp,options) => 
+    { 
+        options.UseSqlServer(connString);
+        
+        options.AddInterceptors(sp.GetRequiredService<AuditingSaveChangesInterceptor>());
+    });
 
 // MediatR
 builder.Services.AddMediatR(config =>
