@@ -37,6 +37,12 @@
             }
         <button type="submit" class="btn btn-primary w-100">Sign in</button>
     </form>
+    <div class="text-center text-muted small mb-2">- or -</div>
+    <form method="post" action="/account/login-test">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+        <button type="submit" class="btn btn-secondary w-100">Test User</button>
+    </form>
 </div>
 
 @section Scripts

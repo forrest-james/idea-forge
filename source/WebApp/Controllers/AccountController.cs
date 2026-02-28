@@ -40,6 +40,20 @@ namespace WebApp.Controllers
             return Redirect("/");
         }
 
+        [HttpPost("/account/login-test")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginTest([FromServices] SignInManager<IdentityUser> signInManager, [FromServices] UserManager<IdentityUser> userManager, string? returnUrl = null)
+        {
+            const string testEmail = "testuser@ideaforge.local";
+            var user = await userManager.FindByEmailAsync(testEmail);
+            if (user == null)
+                return RedirectToAction("Login");
+
+            await signInManager.SignInAsync(user, isPersistent: false);
+
+            return LocalRedirect(string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl);
+        }
+
         [Authorize]
         [HttpPost("logout")]
         [ValidateAntiForgeryToken]
