@@ -65,6 +65,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles="Admin,Standard")]
         [HttpPost("{id:guid}/delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
