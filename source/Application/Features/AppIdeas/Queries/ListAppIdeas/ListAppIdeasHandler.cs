@@ -20,12 +20,13 @@ namespace Application.Features.AppIdeas.Queries.ListAppIdeas
                     a.Id,
                     a.Type,
                     a.Category,
-                    a.Description
+                    a.Description,
+                    a.CreatedAtUtc
                 })
                 .ToListAsync(cancellationToken);
 
             return raw
-                .OrderBy(a => a.Category)
+                .OrderByDescending(a => a.CreatedAtUtc)
                 .ThenBy(a => a.Type)
                 .ThenBy(a => a.Id)
                 .Select(a => new AppIdeaDto

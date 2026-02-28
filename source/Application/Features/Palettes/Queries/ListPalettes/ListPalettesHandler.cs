@@ -19,12 +19,13 @@ namespace Application.Features.Palettes.Queries.ListPalettes
                     p.Id,
                     p.PrimaryColor,
                     p.SecondaryColor,
-                    p.AccentColor
+                    p.AccentColor,
+                    p.CreatedAtUtc
                 })
                 .ToListAsync(cancellationToken);
 
             return raw
-                .OrderBy(p => p.Id)
+                .OrderByDescending(p => p.CreatedAtUtc)
                 .Select(p => new PaletteDto
                 (
                     Id: p.Id,

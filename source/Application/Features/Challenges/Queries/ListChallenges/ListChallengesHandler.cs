@@ -17,8 +17,7 @@ namespace Application.Features.Challenges.Queries.ListChallenges
                 .AsNoTracking()
                 .Include(c => c.AppIdea)
                 .Include(c => c.Palette)
-                .OrderBy(c => c.Name)
-                .ThenBy(c => c.Id)
+                .OrderByDescending(c => c.CreatedAtUtc)
                 .Select(c => new ChallengeListItemDto(                
                     Id: c.Id,
                     Name: c.Name,

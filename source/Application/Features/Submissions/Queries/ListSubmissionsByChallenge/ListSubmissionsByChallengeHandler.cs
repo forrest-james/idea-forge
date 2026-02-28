@@ -19,12 +19,13 @@ namespace Application.Features.Submissions.Queries.ListSubmissionsByChallenge
                 {
                     s.Id,
                     s.Description,
+                    s.CreatedAtUtc,
                     ImageCount = s.Images.Count
                 })
                 .ToListAsync(cancellationToken);
 
             return raw
-                .OrderByDescending(x => x.Id)
+                .OrderByDescending(x => x.CreatedAtUtc)
                 .Select(x => new SubmissionListItemDto
                 (
                     Id: x.Id,
