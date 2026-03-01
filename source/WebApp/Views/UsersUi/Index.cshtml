@@ -1,0 +1,126 @@
+﻿@model WebApp.ViewModels.Users.UsersIndexVm
+@{
+    ViewData["Title"] = "Users Management";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+            <h1 class="h3 mb-0">User Management</h1>
+            <div class="text-muted small">Admin only</div>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">Add user</div>
+        <div class="card-body">
+            <form method="post" action="/users/create" class="row g-3">
+                @Html.AntiForgeryToken()
+                <div class="col-md-7">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" name="email" placeholder="user@example.com" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Role</label>
+                    <select class="form-select" name="role">
+                        @foreach (var r in Model.Roles)
+                        {
+                            <option value="@r">@r</option>
+                        }
+                        </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100" type="submit">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">Users</div>
+        <div class="table-responsive">
+            <table class="table table-striped table-dark align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th style="width: 200px;">Role</th>
+                        <th style="width: 200px;">Submissions</th>
+                        <th style="width: 200px;" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var u in Model.Users)
+                {
+                    <tr>
+                        <td>@u.Email</td>
+                        <td>
+                            <form method="post" action="/users/@u.Id/role" class="d-flex gap-2">
+                                @Html.AntiForgeryToken()
+                                <select class="form-select form-select-sm" name="role">
+                                @foreach (var r in Model.Roles)
+                                {
+                                    <option value="@r" selected="@(r == u.Role)">@r</option>          
+                                }
+                                </select>
+                                <button class="btn btn-sm btn-outline-primary" type="submit">Save</button>
+                            </form>
+                        </td>
+                        <td>
+                            <span class="badge text-bg-secondary">@u.SubmissionCount</span>
+                        </td>
+                        <td class="text-end">
+                            <button type="button"
+                                class="btn btn-sm btn-outline-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteUserModal"
+                                data-user-id="@u.Id"
+                                data-user-email="@u.Email"
+                                data-user-submissions="@u.SubmissionCount">Delete</button>
+                        </td>
+                    </tr>  
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Delete modal -->
+    <div class="modal fade" id="confirmDeleteUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete user?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <strong id="deleteUserEmail"></strong>
+                    </div>
+                    <div class="text-muted">This will delete the user and cascade delete their submissions.</div>
+                    <div class="mt-2">Submissions to delete: <span class="badge text-bg-secondary" id="deleteUserSubmissions"</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post" id="deleteUserForm" class="m-0">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        const modal = document.getElementById('confirmDeleteUserModal');
+        modal?.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-user-id');
+            const email = button.getAttribute('data-user-email');
+            const submissions = button.getAttribute('data-user-submissions');
+
+            document.getElementById('deleteUserEmail').textContent = email;
+            document.getElementById('deleteUserSubmissions').textContent = submissions;
+            document.getElementById('deleteUserForm').action = `/users/${id}/delete`;
+        }
+    </script>
+}

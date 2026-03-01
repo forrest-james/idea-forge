@@ -31,6 +31,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="AppIdeasUi" asp-action="Index">App Ideas</a>
                         </li>
+                        @if (User.IsInRole(Roles.Admin))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="UsersUi" asp-action="Index">Users</a>
+                                </li>
+                            }
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li>
@@ -47,7 +53,7 @@
                                     role == Roles.Standard ? "text-bg-primary" :
                                     role == Roles.Test ? "text-bg-secondary" :
                                     "text-bg-secondary";
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-3">                                    
                                     <div class="d-flex flex-column  lh-1">
                                         <span class="text-light small fw-semibold">@username</span>
                                         <span class="badge @roleClass align-self-start mt-1">@role</span>
