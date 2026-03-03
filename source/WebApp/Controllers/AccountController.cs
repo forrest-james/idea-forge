@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 using WebApp.ViewModels.Account;
 
 namespace WebApp.Controllers
@@ -61,6 +63,43 @@ namespace WebApp.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(Login));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("/account/set-password")]
+        public IActionResult SetPassword([FromQuery] string userId, [FromQuery] string token)
+        {
+            return View(new SetPasswordVm { UserId = userId, Token = token });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("/account/set-password")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetPassword([FromServices] UserManager<IdentityUser> userManager, SetPasswordVm vm, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            var user = await userManager.FindByIdAsync(vm.UserId);
+            if (user is null)
+            {
+                ModelState.AddModelError("", "Invalid user.");
+                return View(vm);
+            }
+
+            var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(vm.Token));            
+
+            var result = await userManager.ResetPasswordAsync(user, decodedToken, vm.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
+
+                return View(vm);
+            }
+
+            TempData["Success"] = "Password set successfully. You can no log in.";
+            return Redirect("/account/login");
         }
     }
 }

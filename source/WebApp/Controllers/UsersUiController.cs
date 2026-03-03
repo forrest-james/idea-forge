@@ -3,8 +3,10 @@ using Data.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text;
 using WebApp.ViewModels.Users;
 
 namespace WebApp.Controllers
@@ -94,6 +96,14 @@ namespace WebApp.Controllers
             var addRole = await _userManager.AddToRoleAsync(user, role);
             if (!addRole.Succeeded)
                 throw new InvalidOperationException(string.Join("; ", addRole.Errors.Select(e => e.Description)));
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            var setPasswordUrl = $"{Request.Scheme}://{Request.Host}/account/set-password?userId={user.Id}&token={encodedToken}";
+
+            TempData["SetPasswordUrl"] = setPasswordUrl;
+            TempData["SetPasswordEmail"] = user.Email ?? user.UserName ?? "";
 
             return RedirectToAction(nameof(Index));
         }

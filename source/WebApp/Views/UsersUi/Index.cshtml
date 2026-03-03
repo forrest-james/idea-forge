@@ -9,6 +9,18 @@
             <h1 class="h3 mb-0">User Management</h1>
             <div class="text-muted small">Admin only</div>
         </div>
+        @if (TempData["SetPasswordUrl"] is string url)
+        {
+            <div class="alert alert-info">
+                <div class="fw-semibold mb-1">Set-password link generated for @TempData["SetPasswordEmail"]</div>
+                <div class="small text-muted mb-2">Copy and send this link to the user:</div>
+
+                <div class="input-group">
+                    <input class="form-control" id="setPwdUrl" value="@url" readonly />
+                    <button class="btn btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('setPwdUrl').value)">Copy</button>
+                </div>
+            </div>
+        }
     </div>
     <div class="card mb-4">
         <div class="card-header">Add user</div>
