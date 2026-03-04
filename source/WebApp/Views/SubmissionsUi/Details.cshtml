@@ -9,6 +9,7 @@
     var isTest = User.IsInRole(Roles.Test);
 
     var hasNoImages = Model.Images.Count == 0;
+    var deleteDisabled = isTest || (!isOwner && isStandard);
 }
 
 <div class="container py-4">
@@ -25,8 +26,8 @@
             @if (Model.Images.Count == 0)
             {
                 <button type="button" class="btn btn-outline-danger"
-                    disabled= @(isTest || (!isOwner && isStandard))
-                    title=@(isTest ? "This role cannot delete submissions" : (!isOwner && isStandard) ? "Only the submission owner can delete" : "Delete this submission")
+                    @(deleteDisabled ? "disabled" : "")
+                    title="@(isTest ? "This role cannot delete submissions" : (!isOwner && isStandard) ? "Only the submission owner can delete" : "Delete this submission")"
                     data-bs-toggle="modal" data-bs-target="#confirmDeleteSubmissionModal" data-submission-id="@Model.Id">Delete Submission</button>
             }
             <form method="post" action="/submissions/@Model.Id/images" enctype="multipart/form-data" class="d-flex gap-2">

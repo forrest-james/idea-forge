@@ -15,8 +15,8 @@
             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createSubmissionModal" data-challenge-id="@Model.Id">Add Submission</button>
             <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editChallengeNameModal" data-challenge-id="@Model.Id" data-challenge-name="@Model.Name">Edit Name</button>
             <button class="btn btn-outline-danger" 
-                disabled = @(Model.Submissions.Count == 0 && !deleteDisabled) 
-                title=@((Model.Submissions.Count == 0 && !deleteDisabled) ? "Delete this challenge" : (Model.Submissions.Count == 0 ? "This role cannot delete Challenges" : "Cannot delete: has submissions")) 
+                @((Model.Submissions.Count > 0 || deleteDisabled) ? "disabled" : "") 
+                title="@((Model.Submissions.Count == 0 && !deleteDisabled) ? "Delete this challenge" : (Model.Submissions.Count == 0 ? "This role cannot delete Challenges" : "Cannot delete: has submissions"))" 
                 data-bs-toggle="modal" data-bs-target="#confirmDeleteChallengeModal" data-challenge-id="@Model.Id">Delete</button>
         </div>
     </div>
