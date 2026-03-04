@@ -106,7 +106,7 @@
                         <strong id="deleteUserEmail"></strong>
                     </div>
                     <div class="text-muted">This will delete the user and cascade delete their submissions.</div>
-                    <div class="mt-2">Submissions to delete: <span class="badge text-bg-secondary" id="deleteUserSubmissions"</div>
+                    <div class="mt-2">Submissions to delete: <span class="badge text-bg-secondary" id="deleteUserSubmissions"></span></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -133,6 +133,6 @@
             document.getElementById('deleteUserEmail').textContent = email;
             document.getElementById('deleteUserSubmissions').textContent = submissions;
             document.getElementById('deleteUserForm').action = `/users/${id}/delete`;
-        }
+        });
     </script>
 }
